@@ -21,6 +21,7 @@ module Jasminerice
           raise
         else
           puts "\nLee just saved you a retry!\n"
+          restart_phantomjs
           retry
         end
       end
@@ -46,6 +47,22 @@ module Jasminerice
       end
 
       url
+    end
+
+    def restart_phantomjs
+      puts "-> Restarting phantomjs: iterating through capybara sessions..."
+      session_pool = Capybara.send('session_pool')
+      session_pool.each do |mode,session|
+        msg = "  => #{mode} -- "
+        driver = session.driver
+        if driver.is_a?(Capybara::Poltergeist::Driver)
+          msg += "restarting"
+          driver.restart
+        else
+          msg += "not poltergeist: #{driver.class}"
+        end
+        puts msg
+      end
     end
 
     def get_results
