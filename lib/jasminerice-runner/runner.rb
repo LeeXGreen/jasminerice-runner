@@ -12,7 +12,17 @@ module Jasminerice
 
     def run
       Capybara.default_driver = capybara_driver
-      visit jasmine_url
+      timeout_retries = 3
+      begin
+        visit jasmine_url
+      rescue Capybara::Poltergeist::TimeoutError
+        timeout_retries -= 1
+        if timeout_retries < 0
+          raise
+        else
+          retry
+        end
+      end
       print "Running jasmine specs"
 
       wait_for_finished
