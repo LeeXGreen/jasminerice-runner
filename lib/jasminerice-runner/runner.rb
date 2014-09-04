@@ -20,6 +20,7 @@ module Jasminerice
         if timeout_retries < 0
           raise
         else
+          puts "\nLee just saved you a retry!\n"
           retry
         end
       end
